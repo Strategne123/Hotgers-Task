@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Game_Controller : MonoBehaviour
 {
-    public static int difficulty;
+    public static int difficulty=1;
     public static int up=1;
 
 
