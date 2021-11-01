@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 3cfe34e182520cb4f98b0d703418da6a
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Plaguard
+  fontNames:
+  - Plaguard
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 06ea4447e2880be4bbb16880cf4c6a0d, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
