@@ -1,11 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Game_Controller : MonoBehaviour
 {
-    public static int difficulty=1;
-    public static int up=1;
+    protected float hspeed=0.1f;
+    protected static int up = 1;
+    protected static int difficulty = 1;
 
+    private void Awake()
+    {
+        if (PlayerPrefs.GetInt("difficulty") != 0)
+        {
+            difficulty = PlayerPrefs.GetInt("difficulty");
+        }
+    }
 
 }

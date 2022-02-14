@@ -1,66 +1,63 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections.Generic;
 
-public class TileMap_Controller : MonoBehaviour
+public class TileMap_Controller : Game_Controller
 {
-    Tilemap tilemap;
-    public TileBase wall;
-    public int n;   //интервал между препядствиями
-    int leftSide=16; //ширина окна для создания тайлов
-    int[,] map;
-    Transform ball_pos;
-    Vector3Int gridPos;
-    int obstacle_x=0;
-    Dictionary<int,int> obstacles=new Dictionary<int, int>(); //сохранение в памяти позиций препядствий
-
-    void ChangeTile(Vector3Int pos)
-     {
-
-         tilemap.SetTile(new Vector3Int(pos.x - leftSide, -5, 0), null);
-         tilemap.SetTile(new Vector3Int(pos.x - leftSide, 4, 0), null);
-         tilemap.SetTile(new Vector3Int(pos.x + leftSide, -5, 0), wall);
-         tilemap.SetTile(new Vector3Int(pos.x + leftSide, 4, 0), wall);
-     }
-
-    void ObstacleChange()//создание и удаление рандомных препядствий
-    {
-        obstacle_x = gridPos.x; //позиция х текущего препядствия
-        int y = Random.Range(-4, 4);
-        tilemap.SetTile(new Vector3Int(gridPos.x + leftSide, y, 0), wall);
-        obstacles.Add(gridPos.x + leftSide, y); 
-        int x;
-
-        if (obstacles.TryGetValue(gridPos.x - leftSide, out y)) //если препядствие вышло за левую границу окна
-        {
-            x = gridPos.x - leftSide;
-            tilemap.SetTile(new Vector3Int(x, y, 0), null);
-            obstacles.Remove(x);
-        }
-    }
+    private Tilemap tilemap;
+    private int obstacle_x=0;
+    private Vector3Int gridPos;
+    private int windowWidth = 16;
+    private Material material;
+    private Vector2 offset = Vector2.zero;
+    [SerializeField] private GameObject background;
+    private Dictionary<int,int> obstacles=new Dictionary<int, int>();
+    [SerializeField] private int distance;
+    [SerializeField] private TileBase wall;
+    [SerializeField] private Transform ball_pos;
 
     private void Start()
     {
+        material = background.GetComponent<Renderer>().material;
+        offset = material.GetTextureOffset("_MainTex");
         tilemap = GetComponent<Tilemap>();
-        ball_pos = GameObject.Find("Ball").transform;
-        for (int x = -leftSide; x < leftSide; x++)
+        for (var x = -windowWidth; x < windowWidth; x++)
         {
             tilemap.SetTile(new Vector3Int(x, -5, 0), wall);
             tilemap.SetTile(new Vector3Int(x, 4, 0), wall);
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (Time.timeScale != 0)
         {
+            offset.x += hspeed*Time.fixedDeltaTime;
+            material.SetTextureOffset("_MainTex",offset);
             gridPos = tilemap.WorldToCell(ball_pos.position);
-            ChangeTile(gridPos); 
-            if(gridPos.x%n==0 && gridPos.x!=obstacle_x)  //создание препядствия раз в n тайлов
+            if(gridPos.x % distance == 0 && gridPos.x != obstacle_x)
             {
                 ObstacleChange();
             }
+        }
+    }
+
+    /// <summary>
+    /// Создает новые препядствия, удаляет старые
+    /// </summary>
+    private void ObstacleChange()
+    {
+        obstacle_x = gridPos.x;
+        var y = Random.Range(-4, 4);
+        tilemap.SetTile(new Vector3Int(gridPos.x + windowWidth, y, 0), wall);
+        obstacles.Add(gridPos.x + windowWidth, y);
+
+        //если препядствие вышло за левую границу окна
+        if (obstacles.TryGetValue(gridPos.x - windowWidth, out y))
+        {
+            var x = gridPos.x - windowWidth;
+            tilemap.SetTile(new Vector3Int(x, y, 0), null);
+            obstacles.Remove(x);
         }
     }
 }
