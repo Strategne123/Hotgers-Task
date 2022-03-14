@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.Advertisements;
 
-public class Ball_Controller : MonoBehaviour
+public class Ball_Controller : Game_Controller
 {
     private Rigidbody2D rb;
     private float score = 0;
