@@ -2,12 +2,15 @@
 using System.Collections;
 using UnityEngine.Advertisements;
 
-public class Ball_Controller : Game_Controller
+public class Ball_Controller : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private float koef = 1;
-    private float lifetime = 0;
-    [SerializeField] private float vspeed;
+    private float score = 0;
+    private float coefficient = 1;
+
+    [SerializeField]
+    private float vspeed;
+
 
     private void Awake()
     {
@@ -15,28 +18,29 @@ public class Ball_Controller : Game_Controller
         {
             Advertisement.Initialize("4462951", false);
         }
+        if (PlayerPrefs.GetInt("difficulty") != 0)
+        {
+            difficulty = PlayerPrefs.GetInt("difficulty");
+        }
         rb = GetComponent<Rigidbody2D>();
     }
     
     private void Start()
     {
         Time.timeScale = 1;
+        up = 1;
         StartCoroutine(CoefficientInc());   
     }
 
     private void FixedUpdate()
     {
-        lifetime++;
-        rb.velocity = new Vector2(0, vspeed * up * koef);
-        var tempPosition = Camera.main.transform.position;
-        tempPosition.x = transform.position.x;
-        Camera.main.transform.position = tempPosition;
-
+        score+=difficulty;
+        rb.velocity = new Vector2(0, vspeed * up * coefficient);
     }
 
     private IEnumerator CoefficientInc()
     {
-        koef += 0.5f;
+        coefficient += 0.5f;
         yield return new WaitForSeconds(10);
     }
 
@@ -48,7 +52,7 @@ public class Ball_Controller : Game_Controller
             Camera.current.GetComponent<AudioSource>().volume = 0;
             Advertisement.Show("Interstitial_Android");
         }
-        UI_Game.OnDeath(lifetime);
+        UI_Game.OnDeath(score);
         Time.timeScale = 0;
     }
 }

@@ -4,16 +4,18 @@ using UnityEngine.SceneManagement;
 
 public class UI : Game_Controller
 {
+    [SerializeField]
+    private Button[] buttons;
+
     private void Start()
     {
-        var buttons = GameObject.FindGameObjectsWithTag("difficulty");
         buttons[difficulty - 1].GetComponent<Button>().Select();
     }
 
-    public void SetDifficulty(int dif)
+    public void SetDifficulty(int _difficulty)
     {
-        difficulty = dif;
-        PlayerPrefs.SetInt("difficulty", dif);
+        difficulty = _difficulty;
+        PlayerPrefs.SetInt("difficulty", _difficulty);
         Play();
     }
 

@@ -1,25 +1,35 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
 
 public class UI_Game : UI
 {
+    private Button button;
+    private GameObject info;
     private static UI_Game instance;
-    [SerializeField] private Text time;
-    [SerializeField] private Text record;
-    [SerializeField] private Button button;
-    [SerializeField] private GameObject info;
-    [SerializeField] private GameObject endGame;
 
+    [SerializeField]
+    private Text time;
+    [SerializeField]
+    private Text record;
+    [SerializeField]
+    private GameObject endGame;
+    [SerializeField]
+    private GameObject goButton;
+    
     private void Start()
     {
         instance = this;
-        button.onClick.AddListener(HideInfo);
+        info = goButton.transform.GetChild(0).gameObject;
+        button = goButton.GetComponent<Button>();
+        Invoke("HideInfo",2);
     }
 
     private void HideInfo()
     {
-        button.onClick.RemoveAllListeners();
         info.SetActive(false);
     }
 
